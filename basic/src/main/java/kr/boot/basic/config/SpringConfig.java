@@ -1,8 +1,8 @@
 package kr.boot.basic.config;
 
 
-import kr.boot.basic.repository.JdbcMemberRepository;
-import kr.boot.basic.repository.MemberRepository;
+import jakarta.persistence.EntityManager;
+import kr.boot.basic.repository.*;
 import kr.boot.basic.service.MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +13,11 @@ import javax.sql.DataSource;
 public class SpringConfig {
 
     private final DataSource dataSource;
-    public SpringConfig(DataSource dataSource){
+    private final EntityManager em;
+
+    public SpringConfig(DataSource dataSource, EntityManager em ){
         this.dataSource = dataSource;
+        this.em = em;
     }
     @Bean
     public MemberService memberService(MemberRepository memberRepository) {
@@ -24,7 +27,9 @@ public class SpringConfig {
     @Bean
     public MemberRepository memberRepository() {
         //return new MemoryMemberRepository();
-        return new JdbcMemberRepository(dataSource);
+        //return new JdbcMemberRepository(dataSource);
+        //return new JdbcTemplateMemberRepository(dataSource);
+        return new JpaMemberRepository(em);
     }
 
 }
